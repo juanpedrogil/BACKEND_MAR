@@ -26,7 +26,7 @@ namespace DEV_API_MARISQUERIA.Services
             return builder.Build();
         }
         
-        public DataTable GetDate(string sp_name, string parametro)
+        public DataTable GetData(string sp_name, string parametro)
         {
             using (SqlConnection con = sqlConnection)
             {
@@ -49,7 +49,8 @@ namespace DEV_API_MARISQUERIA.Services
                         command.Parameters.Add(param);
                     }
 
-                    command.ExecuteNonQuery();
+                    adapter = new SqlDataAdapter(command);
+                    adapter.Fill(ds,sp_name);
                 }
                 catch (Exception ex)
                 {
@@ -112,7 +113,7 @@ namespace DEV_API_MARISQUERIA.Services
                     SqlDataAdapter adapter;
 
                     con.Open();
-                    SqlCommand command = new SqlCommand(sp_Name, con);
+                    SqlCommand command = new SqlCommand(sp_name, con);
                     command.CommandType = CommandType.StoredProcedure;
 
                     if (aux_param.Length != 0)

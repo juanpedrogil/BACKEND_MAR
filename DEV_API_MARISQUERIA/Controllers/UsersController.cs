@@ -1,14 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using DEV_API_MARISQUERIA.Models;
+using DEV_API_MARISQUERIA.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DEV_API_MARISQUERIA.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class UsersController : Controller
     {
+        UserService db = new UserService();
+
+
+        [HttpGet]
+        public IEnumerable<User> get()
+        {
+            try
+
+            {
+                DataTable dt = db.GetData("ADM.SP_GET_ALLUSERS", "");
+                var result = (from rw in dt.Select()
+                              select new User
+                              {
+                                  ID_USER = Convert.ToInt32(rw["ID_USER"]),
+                                  USERNAME = Convert.ToString(rw["USERNAME"]),
+                                  //PASSWORD = Convert.ToString(rw["PASSWORD"]),
+                                  NOMBRE = Convert.ToString(rw["NOMBRE"]),
+                                  APELLIDO = Convert.ToString(rw["APELLIDO"]),
+                                  ESTATUS = Convert.ToInt32(rw["ESTATUS"]),
+                                  LOADDATE = Convert.ToDateTime(rw["LOADDATE"]),
+                                  UPDATEDATE = Convert.ToDateTime(rw["UPDATEDATE"])
+                              }
+                                  );
+                return result;
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
+        }
         // GET: Users
         public ActionResult Index()
         {
