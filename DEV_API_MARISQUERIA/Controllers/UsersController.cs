@@ -39,7 +39,36 @@ namespace DEV_API_MARISQUERIA.Controllers
                                   );
                 return result;
             }
-            catch(Exception e)
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+
+        [HttpGet("{id_user}")]
+        public IEnumerable<User> getUser(int id_user)
+        {
+            try
+
+            {
+                DataTable dt = db.GetData("ADM.SP_GET_USER", id_user+"");
+                var result = (from rw in dt.Select()
+                              select new User
+                              {
+                                  ID_USER = Convert.ToInt32(rw["ID_USER"]),
+                                  USERNAME = Convert.ToString(rw["USERNAME"]),
+                                  //PASSWORD = Convert.ToString(rw["PASSWORD"]),
+                                  NOMBRE = Convert.ToString(rw["NOMBRE"]),
+                                  APELLIDO = Convert.ToString(rw["APELLIDO"]),
+                                  ESTATUS = Convert.ToInt32(rw["ESTATUS"]),
+                                  LOADDATE = Convert.ToDateTime(rw["LOADDATE"]),
+                                  UPDATEDATE = Convert.ToDateTime(rw["UPDATEDATE"])
+                              }
+                                  );
+                return result;
+            }
+            catch (Exception e)
             {
                 return null;
             }

@@ -43,7 +43,7 @@ namespace DEV_API_MARISQUERIA.Services
 
                     if(aux_param.Length != 0)
                     {
-                        param = new SqlParameter("@parametrosp", aux_param);
+                        param = new SqlParameter("@usuario", aux_param);
                         param.Direction = ParameterDirection.Input;
                         param.DbType = DbType.Int64;
                         command.Parameters.Add(param);
