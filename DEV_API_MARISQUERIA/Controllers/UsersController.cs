@@ -7,6 +7,8 @@ using DEV_API_MARISQUERIA.Models;
 using DEV_API_MARISQUERIA.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DEV_API_MARISQUERIA.Controllers
 {
@@ -41,6 +43,7 @@ namespace DEV_API_MARISQUERIA.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return null;
             }
         }
@@ -70,6 +73,7 @@ namespace DEV_API_MARISQUERIA.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return null;
             }
         }
@@ -93,64 +97,28 @@ namespace DEV_API_MARISQUERIA.Controllers
 
         // POST: Users/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(User parametros)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                //var aux_param = (JObject)JsonConvert.DeserializeObject(parametros);
+                /*if (db.SetData("ADM.SP_INSERT_USER", aux_param["username"].Value<string>()
+                    , aux_param["password"].Value<string>(), aux_param["nombre"].Value<string>()
+                    , aux_param["apellido"].Value<string>(), aux_param["estatus"].Value<string>()) == 1)*/
+                if (db.SetData("ADM.SP_INSERT_USER", parametros.USERNAME, parametros.PASSWORD, parametros.NOMBRE
+                    , parametros.APELLIDO, parametros.ESTATUS.ToString()) == 1)
+                {
+                    return StatusCode(200);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
             }
-            catch
+            catch(Exception e)
             {
-                return View();
-            }
-        }
-
-        // GET: Users/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Users/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Users/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
+                Console.WriteLine(e.Message);
+                return StatusCode(500);
             }
         }
     }

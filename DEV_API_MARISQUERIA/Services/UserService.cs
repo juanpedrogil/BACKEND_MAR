@@ -64,31 +64,52 @@ namespace DEV_API_MARISQUERIA.Services
                 return ds.Tables[0];
             }
         }
-        public void SetData(string sp_name, string parametro)
+        public int SetData(string sp_name, string username, string password, string nombre, string apellido, string estatus)
         {
             using (SqlConnection con = sqlConnection)
             {
                 DataSet ds = new DataSet();
                 try
                 {
-                    string aux_param = parametro.Replace("&", "&amp;");
-                    SqlParameter param;
+                    SqlParameter pUsername;
+                    SqlParameter pPassword;
+                    SqlParameter pNombre;
+                    SqlParameter pApellido;
+                    SqlParameter pEstatus;
                     SqlDataAdapter adapter;
 
                     con.Open();
                     SqlCommand command = new SqlCommand(sp_name, con);
                     command.CommandType = CommandType.StoredProcedure;
 
-                    if (aux_param.Length != 0)
-                    {
-                        param = new SqlParameter("@parametrosp", aux_param);
-                        param.Direction = ParameterDirection.Input;
-                        param.DbType = DbType.Int64;
-                        command.Parameters.Add(param);
-                    }
+                    pUsername = new SqlParameter("@USERNAME", username);
+                    pUsername.Direction = ParameterDirection.Input;
+                    pUsername.DbType = DbType.String;
+                    command.Parameters.Add(pUsername);
+
+                    pPassword = new SqlParameter("@PASSWORD", password);
+                    pPassword.Direction = ParameterDirection.Input;
+                    pPassword.DbType = DbType.String;
+                    command.Parameters.Add(pPassword);
+
+                    pNombre = new SqlParameter("@NOMBRE", nombre);
+                    pNombre.Direction = ParameterDirection.Input;
+                    pNombre.DbType = DbType.String;
+                    command.Parameters.Add(pNombre);
+
+                    pApellido = new SqlParameter("@APELLIDO", apellido);
+                    pApellido.Direction = ParameterDirection.Input;
+                    pApellido.DbType = DbType.String;
+                    command.Parameters.Add(pApellido);
+
+                    pEstatus = new SqlParameter("@ESTATUS", estatus);
+                    pEstatus.Direction = ParameterDirection.Input;
+                    pEstatus.DbType = DbType.Int64;
+                    command.Parameters.Add(pEstatus);
 
                     adapter = new SqlDataAdapter(command);
                     adapter.Fill(ds, sp_name);
+                    return 1;
                 }
                 catch (Exception ex)
                 {
@@ -101,43 +122,7 @@ namespace DEV_API_MARISQUERIA.Services
                 }
             }
         }
-        public int SetDataWithReturn(string sp_name, string parametro)
-        {
-            using (SqlConnection con = sqlConnection)
-            {
-                DataSet ds = new DataSet();
-                try
-                {
-                    string aux_param = parametro.Replace("&", "&amp;");
-                    SqlParameter param;
-                    SqlDataAdapter adapter;
-
-                    con.Open();
-                    SqlCommand command = new SqlCommand(sp_name, con);
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    if (aux_param.Length != 0)
-                    {
-                        param = new SqlParameter("@parametrosp", aux_param);
-                        param.Direction = ParameterDirection.Input;
-                        param.DbType = DbType.Int64;
-                        command.Parameters.Add(param);
-                    }
-
-                    int ret_val = Convert.ToInt32(command.ExecuteNonQuery());
-                    return ret_val;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-                finally
-                {
-                    con.Close();
-                    con.Dispose();
-                }
-            }
-        }
+        
 
     }
 }
