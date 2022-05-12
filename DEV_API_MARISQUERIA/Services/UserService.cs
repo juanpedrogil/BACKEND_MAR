@@ -64,13 +64,14 @@ namespace DEV_API_MARISQUERIA.Services
                 return ds.Tables[0];
             }
         }
-        public int SetData(string sp_name, string username, string password, string nombre, string apellido, string estatus)
+        public int SetData(string sp_name, string id_user, string username, string password, string nombre, string apellido, string estatus)
         {
             using (SqlConnection con = sqlConnection)
             {
                 DataSet ds = new DataSet();
                 try
                 {
+                    SqlParameter pId_user;
                     SqlParameter pUsername;
                     SqlParameter pPassword;
                     SqlParameter pNombre;
@@ -81,6 +82,14 @@ namespace DEV_API_MARISQUERIA.Services
                     con.Open();
                     SqlCommand command = new SqlCommand(sp_name, con);
                     command.CommandType = CommandType.StoredProcedure;
+
+                    if(id_user != null)
+                    {
+                        pId_user = new SqlParameter("@usuario", id_user);
+                        pId_user.Direction = ParameterDirection.Input;
+                        pId_user.DbType = DbType.Int64;
+                        command.Parameters.Add(pId_user);
+                    }
 
                     pUsername = new SqlParameter("@USERNAME", username);
                     pUsername.Direction = ParameterDirection.Input;
@@ -122,7 +131,45 @@ namespace DEV_API_MARISQUERIA.Services
                 }
             }
         }
-        
+
+        public int DeleteUser(string sp_name, int id_user)
+        {
+            using (SqlConnection con = sqlConnection)
+            {
+                DataSet ds = new DataSet();
+                try
+                {
+                    SqlParameter pId_User;
+                    SqlDataAdapter adapter;
+
+                    con.Open();
+                    SqlCommand command = new SqlCommand(sp_name, con);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    pId_User = new SqlParameter("@ID_USER", id_user);
+                    pId_User.Direction = ParameterDirection.Input;
+                    pId_User.DbType = DbType.String;
+                    command.Parameters.Add(pId_User);
+
+                    adapter = new SqlDataAdapter(command);
+                    adapter.Fill(ds, sp_name);
+
+                    int res = Convert.ToInt32(ds.Tables[0].Select().Min()["RESULT"]);
+                    return res;
+                    
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    con.Close();
+                    con.Dispose();
+                }
+            }
+        }
+
 
     }
 }

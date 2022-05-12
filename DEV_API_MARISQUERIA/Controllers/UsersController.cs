@@ -105,7 +105,7 @@ namespace DEV_API_MARISQUERIA.Controllers
                 /*if (db.SetData("ADM.SP_INSERT_USER", aux_param["username"].Value<string>()
                     , aux_param["password"].Value<string>(), aux_param["nombre"].Value<string>()
                     , aux_param["apellido"].Value<string>(), aux_param["estatus"].Value<string>()) == 1)*/
-                if (db.SetData("ADM.SP_INSERT_USER", parametros.USERNAME, parametros.PASSWORD, parametros.NOMBRE
+                if (db.SetData("ADM.SP_INSERT_USER", null, parametros.USERNAME, parametros.PASSWORD, parametros.NOMBRE
                     , parametros.APELLIDO, parametros.ESTATUS.ToString()) == 1)
                 {
                     return StatusCode(200);
@@ -116,6 +116,49 @@ namespace DEV_API_MARISQUERIA.Controllers
                 }
             }
             catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost("{id_user}")]
+        public ActionResult DeleteUser(int id_user)
+        {
+            try
+            {
+                if (db.DeleteUser("ADM.SP_DELETE_USER", id_user) == 1)
+                {
+                    return StatusCode(200);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPut]
+        public ActionResult UpdateUser(User usuarioActualizado)
+        {
+            try
+            {
+                if (db.SetData("ADM.SP_UPDATE_USER",usuarioActualizado.ID_USER.ToString(), usuarioActualizado.USERNAME, usuarioActualizado.PASSWORD, usuarioActualizado.NOMBRE
+                    , usuarioActualizado.APELLIDO, usuarioActualizado.ESTATUS.ToString()) == 1)
+                {
+                    return StatusCode(200);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return StatusCode(500);
