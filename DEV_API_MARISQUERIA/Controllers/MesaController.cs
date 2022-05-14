@@ -111,5 +111,26 @@ namespace DEV_API_MARISQUERIA.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpDelete("{id_mesa}")]
+        public ActionResult DeleteMesa(int id_mesa)
+        {
+            try
+            {
+                if (db.DeleteMesa("ODS.ODS_SP_DELETE_MESA", id_mesa) == 1)
+                {
+                    return StatusCode(200);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return StatusCode(500);
+            }
+        }
     }
 }
