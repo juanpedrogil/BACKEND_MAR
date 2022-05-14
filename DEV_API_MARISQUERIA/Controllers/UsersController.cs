@@ -77,23 +77,7 @@ namespace DEV_API_MARISQUERIA.Controllers
                 return null;
             }
         }
-        // GET: Users
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: Users/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Users/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        
 
         // POST: Users/Create
         [HttpPost]
@@ -122,7 +106,7 @@ namespace DEV_API_MARISQUERIA.Controllers
             }
         }
 
-        [HttpPost("{id_user}")]
+        [HttpDelete("{id_user}")]
         public ActionResult DeleteUser(int id_user)
         {
             try
