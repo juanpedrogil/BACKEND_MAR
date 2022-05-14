@@ -16,7 +16,7 @@ namespace DEV_API_MARISQUERIA.Controllers
         private MesaService db = new MesaService();
 
         [HttpGet]
-        public IEnumerable<Mesa> getAll()
+        public IEnumerable<Mesa> GetAll()
         {
             try
 
@@ -43,7 +43,7 @@ namespace DEV_API_MARISQUERIA.Controllers
         }
 
         [HttpGet("{id_mesa}")]
-        public IEnumerable<Mesa> getMesa(int id_mesa)
+        public IEnumerable<Mesa> GetMesa(int id_mesa)
         {
             try
 
@@ -51,6 +51,7 @@ namespace DEV_API_MARISQUERIA.Controllers
                 DataTable dt = db.GetData("ODS.ODS_SP_GET_MESA", id_mesa + "");
                 var result = (from rw in dt.Select()
                               select new Mesa
+
                               {
                                   ID_MESA = Convert.ToInt32(rw["ID_MESA"].ToString()),
                                   DESC_MESA = rw["DESC_MESA"].ToString(),
@@ -66,6 +67,27 @@ namespace DEV_API_MARISQUERIA.Controllers
             {
                 Console.WriteLine(e.Message);
                 return null;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult InsertMesa(Mesa mesa)
+        {
+            try
+            {
+                if (db.SetData("ODS.ODS_SP_INSERT_MESA", null, mesa.DESC_MESA, mesa.DESC_CORTA_MESA, mesa.ESTATUS.ToString()) == 1)
+                {
+                    return StatusCode(200);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return StatusCode(500);
             }
         }
     }
