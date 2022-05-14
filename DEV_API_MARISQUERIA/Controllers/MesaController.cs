@@ -90,5 +90,26 @@ namespace DEV_API_MARISQUERIA.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpPut]
+        public ActionResult UpdateMesa(Mesa mesa)
+        {
+            try
+            {
+                if (db.SetData("ODS.ODS_SP_UPDATE_MESA", mesa.ID_MESA.ToString(), mesa.DESC_MESA, mesa.DESC_CORTA_MESA, mesa.ESTATUS.ToString()) == 1)
+                {
+                    return StatusCode(200);
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return StatusCode(500);
+            }
+        }
     }
 }
