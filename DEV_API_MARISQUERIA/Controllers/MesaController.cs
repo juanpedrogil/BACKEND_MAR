@@ -14,7 +14,7 @@ namespace DEV_API_MARISQUERIA.Controllers
     public class MesaController : Controller
     {
         private MesaService db = new MesaService();
-        
+
         [HttpGet]
         public IEnumerable<Mesa> getAll()
         {
@@ -22,6 +22,33 @@ namespace DEV_API_MARISQUERIA.Controllers
 
             {
                 DataTable dt = db.GetData("ODS.ODS_SP_GETALL_MESA", "");
+                var result = (from rw in dt.Select()
+                              select new Mesa
+                              {
+                                  ID_MESA = Convert.ToInt32(rw["ID_MESA"].ToString()),
+                                  DESC_MESA = rw["DESC_MESA"].ToString(),
+                                  DESC_CORTA_MESA = rw["DESC_CORTA_MESA"].ToString(),
+                                  ESTATUS = Convert.ToInt32(rw["ESTATUS"].ToString()),
+                                  UPDATEDATE = Convert.ToDateTime(rw["UPDATEDATE"].ToString()),
+                                  LOADDATE = Convert.ToDateTime(rw["LOADDATE"].ToString())
+                              }
+                                  );
+                return result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+        [HttpGet("{id_mesa}")]
+        public IEnumerable<Mesa> getMesa(int id_mesa)
+        {
+            try
+
+            {
+                DataTable dt = db.GetData("ODS.ODS_SP_GET_MESA", id_mesa + "");
                 var result = (from rw in dt.Select()
                               select new Mesa
                               {
