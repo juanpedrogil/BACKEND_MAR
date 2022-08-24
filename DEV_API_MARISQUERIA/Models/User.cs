@@ -17,6 +17,9 @@ namespace DEV_API_MARISQUERIA.Models
         public string NOMBRE { get; set; }
         public string APELLIDO { get; set; }
         public int ESTATUS { get; set; }
+        public int ID_PERFIL { get; set; }
+        public DateTime LAST_LOGIN_DATE { get; set; }
+        public DateTime LAST_LOGOUT_DATE { get; set; }
         public DateTime UPDATEDATE { get; set; }
         public DateTime LOADDATE { get; set; }
 

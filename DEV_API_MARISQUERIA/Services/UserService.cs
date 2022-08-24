@@ -77,6 +77,7 @@ namespace DEV_API_MARISQUERIA.Services
                     SqlParameter pNombre;
                     SqlParameter pApellido;
                     SqlParameter pEstatus;
+                    SqlParameter pId_perfil;
                     SqlDataAdapter adapter;
 
                     con.Open();
@@ -115,6 +116,11 @@ namespace DEV_API_MARISQUERIA.Services
                     pEstatus.Direction = ParameterDirection.Input;
                     pEstatus.DbType = DbType.Int64;
                     command.Parameters.Add(pEstatus);
+
+                    pId_perfil = new SqlParameter("@ID_PERFIL", estatus);
+                    pId_perfil.Direction = ParameterDirection.Input;
+                    pId_perfil.DbType = DbType.Int64;
+                    command.Parameters.Add(pId_perfil);
 
                     adapter = new SqlDataAdapter(command);
                     adapter.Fill(ds, sp_name);
