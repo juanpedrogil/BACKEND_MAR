@@ -148,5 +148,43 @@ namespace DEV_API_MARISQUERIA.Controllers
                 return StatusCode(500);
             }
         }
+
+
+        [Route("login")]
+        [HttpPost]
+        public IEnumerable<User> login(User parametro)
+        {
+            try
+            {
+                DataTable dt;
+                dt = db.login("ADM.SP_LOGIN", parametro.USERNAME, parametro.PASSWORD);
+                if (dt.Columns.Count > 1)
+                {
+                    var result = (from rw in dt.Select()
+                     select new User
+                     {
+                         ID_USER = Convert.ToInt32(rw["ID_USER"]),
+                         USERNAME = Convert.ToString(rw["USERNAME"]),
+                         //PASSWORD = Convert.ToString(rw["PASSWORD"]),
+                         NOMBRE = Convert.ToString(rw["NOMBRE"]),
+                         APELLIDO = Convert.ToString(rw["APELLIDO"]),
+                         ESTATUS = Convert.ToInt32(rw["ESTATUS"]),
+                         LOADDATE = Convert.ToDateTime(rw["LOADDATE"]),
+                         UPDATEDATE = Convert.ToDateTime(rw["UPDATEDATE"])
+                     }
+                                  );
+                    return result;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
     }
 }

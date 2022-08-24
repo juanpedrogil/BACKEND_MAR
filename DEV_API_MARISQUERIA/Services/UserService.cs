@@ -176,6 +176,46 @@ namespace DEV_API_MARISQUERIA.Services
             }
         }
 
+        public DataTable login(string sp_name, string username, string password)
+        {
+            using (SqlConnection con = sqlConnection)
+            {
+                DataSet ds = new DataSet();
+                try
+                {
+                    SqlParameter pUsername;
+                    SqlParameter pPassword;
+                    SqlDataAdapter adapter;
+
+                    con.Open();
+                    SqlCommand command = new SqlCommand(sp_name, con);
+                    command.CommandType = CommandType.StoredProcedure;
+                    pUsername = new SqlParameter("@USERNAME", username);
+                    pUsername.Direction = ParameterDirection.Input;
+                    pUsername.DbType = DbType.String;
+                    command.Parameters.Add(pUsername);
+
+                    pPassword = new SqlParameter("@PASSWORD", password);
+                    pPassword.Direction = ParameterDirection.Input;
+                    pPassword.DbType = DbType.String;
+                    command.Parameters.Add(pPassword);
+
+                    adapter = new SqlDataAdapter(command);
+                    adapter.Fill(ds, sp_name);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    con.Close();
+                    con.Dispose();
+                }
+                return ds.Tables[0];
+            }
+        }
+
 
     }
 }
